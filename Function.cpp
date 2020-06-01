@@ -40,9 +40,34 @@ string CaesarCipher(string s, int shift)
 string checkEven(string s) 
 { 
 	int n = s.length();
-    if (s.length() % 2 != 0) 
+    for(int i = 0;i<s.length()-1;i++)
+    {
+    	if(s[i] == s[i+1])
+    	{
+    		if(s[i] == 'x')
+    		{
+    			string temp = s.substr(i+1,s.length()+i-1);
+    			s[i+1] = 'q';
+    			s.erase(i+2,s.length()-i-4);
+    			s+=temp;
+    			cout<<s<<endl;
+			}
+			else
+			{
+				string temp = s.substr(i+1,s.length()+i-1);
+    			s[i+1] = 'x';
+    			s.erase(i+2,s.length()-i-4);
+    			s+=temp;
+    			cout<<s<<endl;
+			}
+		}
+	}
+	if (s.length() % 2 != 0) 
 	{ 
-        s+='x'; 
+		if(s[s.length()-1] == 'x')
+        	s+='q';
+		else
+			s+='x';	 
     } 
     return s; 
 }
@@ -99,6 +124,13 @@ void Table(string key, char T[5][5])
             } 
         } 
     } 
+    for(int i =0;i<5;i++)
+    {
+	    for(int j =0;j<5;j++)
+	    	cout<<T[i][j]<<"\t";
+    	cout<<endl;
+	}
+    
 } 
 
 void search(char T[5][5], char a, char b, int arr[]) 
@@ -188,16 +220,99 @@ string VigenereCipher(string s, string key, bool Choose)
     {  
     	if(s[i]>=97 && s[i]<= 122)
     	{
-			cout<<s[i]<<" "<<key[i]<<" ";	
+			//cout<<s[i]<<" "<<key[i]<<" ";	
 	    	if(Choose == false)
 	    	{
-	    		s[i] = ((s[i]-97) - (key[i]-97)) %26 + 97;
+	    		s[i] = ((s[i]) - (key[i]) + 26) %26 + 97; //Decrypt
 			}
 			else
-	        	s[i] = ((s[i]-97) + (key[i]-97))%26 + 97;
-	        cout<<s[i]<<endl;	
+	        	s[i] = ((s[i]-97) + (key[i]-97))%26 + 97; //Encrypt
+	        //cout<<s[i]<<endl;	
 		}
     } 
     return s; 
 } 
 
+//trans tech
+string TransEncrypt(string key, string text)
+{
+    int col = key.length(); 
+    int row = text.length()/col;   
+    
+    if (text.length() % col != 0) 
+        row += 1; 
+    char T[row][col];
+	int pos = 0;   
+    for(int i=0; i < row; i++) 
+    { 
+        for (int j=0; j<col;j++) 
+        { 
+            if(pos >= text.length())
+			{
+            	T[i][j] = '_';
+            	pos++;
+        	}
+            else	
+				T[i][j] = text[pos++]; 
+        } 
+    } 
+  	cout <<"Encryptmatrix: "<<endl;
+  	for(int i = 0;i<key.length();i++)
+  		cout<<key[i]<<"\t";
+	cout<<endl;
+	
+	 for(int i=0; i < row; i++) 
+    { 
+		pos = 0;
+        for (int j=0; j<col;j++) 
+        { 
+        	cout<<T[i][key[pos++] -48-1]<<"\t"; 
+    	}
+    	cout<<endl;
+	}
+	
+	string result = "";
+	for(int i=0; i < col; i++) 
+        for (int j=0; j<key.length();j++)
+        {
+        	result+= T[j][key[i]-48-1];
+		}
+        	
+    return result; 
+ } 
+ 
+string TransDecrypt(string key, string text) 
+{ 
+    int col = key.length(); 
+    int row = text.length()/col;	 
+    char T[row][col]; 
+    int pos = 0;
+	for (int i=0; i<col; i++) 
+        for(int j=0; j<key.length(); j++) 
+            T[j][key[i] -48-1] = text[pos++];
+            
+	cout<<"DecryptMatrix: "<<endl;
+  	sort(key.begin(),key.end());
+  	for(int i = 0;i<key.length();i++)
+  		cout<<key[i]<<"\t";
+  	cout<<endl;	
+  		
+	for(int i=0; i<row; i++)
+	{
+        for(int j=0; j<col; j++)
+		{
+        	cout<<T[i][j]<<"\t";
+		} 
+		cout<<endl;
+	} 
+	
+	string result = "";
+    for (int i=0; i<row; i++) 
+        for(int j=0; j<col; j++)
+		{	
+			if(T[i][j] == '_')
+				continue;
+            result += T[i][j];
+		} 
+    return result; 
+} 

@@ -7,6 +7,7 @@ void Menu();
 void Caesar();
 void Playfair();
 void Vigenere();
+void TransTech();
 
 
 int main() {
@@ -21,7 +22,7 @@ void Menu()
 		cout<<"1. Caesar Cipher"<<endl;
 		cout<<"2. Playfair Cipher"<<endl;
 		cout<<"3. Vigenere Cipher"<<endl;
-		cout<<"4. One Time Pad"<<endl;
+		cout<<"4. Transposition Techniques"<<endl;
 		char key = _getch();
 		switch(key)
 		{
@@ -38,6 +39,11 @@ void Menu()
 			case '3':
 			{
 				Vigenere();
+				break;
+			}
+			case '4':
+			{
+				TransTech();
 				break;
 			}	
 			case 27:
@@ -76,6 +82,7 @@ void Caesar()
     			cout << "\nshift: ";
     			cin>>shift;
 				Choose = true;
+				cin.ignore();
 				break;
 			}
 			case '2':
@@ -85,6 +92,7 @@ void Caesar()
     			getline(cin, text);
     			cout << "\nshift: ";
     			cin>>shift;
+				cin.ignore();
 				break;
 			}
 			case 27:
@@ -94,15 +102,16 @@ void Caesar()
 				break;
 			}	
 		}
-	if(Choose ==false)
-	{
-		result = CaesarCipher(text,26-shift);
-   	 	cout << "Plain: " << result<<endl; 
-		
-	} 
-	else
-		result = CaesarCipher(text,shift);
-    	cout << "\nCipher: " << result<<endl; 
+		if(Choose ==false)
+		{
+			result = CaesarCipher(text,26-shift);
+	   	 	cout << "\nPlain: " << result<<endl; 	
+		} 
+		else
+		{
+			result = CaesarCipher(text,shift);
+	    	cout << "\nCipher: " << result<<endl; 
+		}
 	}
 }
 void Playfair()
@@ -169,7 +178,7 @@ void Playfair()
 		{
 			
 	    	result = PlayfairCipher(text, T,Choose); 
-	   	 	cout << "Plain: " << result<<endl; 
+	   	 	cout << "\nPlain: " << result<<endl; 
 			
 		} 
 		else
@@ -231,7 +240,7 @@ void Vigenere()
 		{
 			
 	    	result = VigenereCipher(text, key,Choose); 
-	   	 	cout << "Plain: " << result<<endl; 
+	   	 	cout << "\nPlain: " << result<<endl; 
 		} 
 		else
 		{
@@ -240,4 +249,59 @@ void Vigenere()
 		}
 	}
 } 
+
+void TransTech()
+{
+	while(!_kbhit())
+	{
+		cout<<"=======Transposition Techniques========="<<endl;
+		cout<<"1. Encrypt"<<endl;
+		cout<<"2. Decypt"<<endl;
+		string text = "";
+		string key;
+		string result = ""; 
+		bool Choose = false;
+		char keyButton = _getch();
+		switch(keyButton)
+		{
+			case '1':
+			{
+				cout<<"=======Encrypt========="<<endl;
+    			cout << "plain Text: "; 
+    			getline(cin,text);
+    			cout << "\nkey: ";
+    			getline(cin,key);
+				Choose = true;
+				break;
+			}
+			case '2':
+			{
+				cout<<"=======Decrypt========="<<endl;
+    			cout << "Cipher Text: "; 
+    			getline(cin, text);
+    			cout << "\nkey: ";
+    			getline(cin, key);
+				break;
+			}
+			case 27:
+			{
+				system("cls");
+				Menu();
+				break;
+			}	
+		}	  
+		
+		if(Choose ==false)
+		{
+			
+	    	result = TransDecrypt(key,text); 
+	   	 	cout << "\nPlain: " << result<<endl; 
+		} 
+		else
+		{
+	    	result = TransEncrypt(key,text); 
+	    	cout << "\nCipher: " << result<<endl; 
+		}
+	}
+}
 
